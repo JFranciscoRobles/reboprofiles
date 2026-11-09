@@ -1,0 +1,17 @@
+{
+  "name": "@reboprofiles/server",
+  "version": "0.1.0",
+  "description": "What a profile's page needs of a server: the page with its links signed, and the routes its visits and clicks come back to, told to the application as events. Nothing kept; no cookies.",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@reboprofiles/core": "0.1.0"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs"
+  }
+}

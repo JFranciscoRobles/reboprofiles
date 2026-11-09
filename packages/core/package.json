@@ -1,0 +1,14 @@
+{
+  "name": "@reboprofiles/core",
+  "version": "0.1.0",
+  "description": "The engine: a profile of blocks (links, contact, networks, words, pictures, video, the application's own), its themes, what is done to it as it is written, and the HTML of its page. No DOM.",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs"
+  }
+}

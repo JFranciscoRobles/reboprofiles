@@ -1,0 +1,17 @@
+{
+  "name": "@reboprofiles/playground",
+  "version": "0.1.0",
+  "description": "The test application every package is tried in: the editor, the page as it is shared, and its numbers, counted by the server as visits and clicks come.",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@reboprofiles/core": "*",
+    "@reboprofiles/react": "*",
+    "@reboprofiles/server": "*"
+  }
+}

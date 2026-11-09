@@ -1,0 +1,29 @@
+{
+  "name": "@reboprofiles/site",
+  "version": "0.1.0",
+  "description": "The landing page of ReboProfiles, its demo and its developer documentation.",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev -p 5311",
+    "build": "next build",
+    "start": "npx serve out -l 5311"
+  },
+  "dependencies": {
+    "@reboprofiles/core": "*",
+    "@reboprofiles/react": "*",
+    "@reboprofiles/server": "*",
+    "markdown-it": "^15.0.2",
+    "markdown-it-anchor": "^10.0.0",
+    "next": "^16.4.3",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "shiki": "^4.5.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/markdown-it": "^14.2.0",
+    "tailwindcss": "^4.3.3"
+  }
+}

@@ -1,0 +1,691 @@
+/* The editor of a profile (rpe-) and its numbers (rps-), drawn in the
+   language of Adobe's Spectrum 2: its grays and its blue, fields with an edge
+   of two pixels and the ring of the focus outside them, round buttons, choices
+   in a track, cards that rise a little, light and dark. Its colours are custom
+   properties an application sets its own over: those named here (`--rp-ink`,
+   `--rp-brand`, `--rp-line`…) are the ones to set. */
+
+.rpe,
+.rps {
+  /* Spectrum 2's grays and its blue, light. */
+  --rp-gray-25: #ffffff;
+  --rp-gray-50: #f8f8f8;
+  --rp-gray-75: #f3f3f3;
+  --rp-gray-100: #e9e9e9;
+  --rp-gray-200: #e1e1e1;
+  --rp-gray-300: #dadada;
+  --rp-gray-400: #c6c6c6;
+  --rp-gray-500: #8f8f8f;
+  --rp-gray-600: #717171;
+  --rp-gray-700: #505050;
+  --rp-gray-800: #292929;
+  --rp-gray-900: #131313;
+  --rp-ink: var(--rp-gray-900);
+  --rp-soft: var(--rp-gray-700);
+  --rp-muted: var(--rp-gray-600);
+  --rp-line: var(--rp-gray-300);
+  --rp-surface: var(--rp-gray-75);
+  --rp-panel: var(--rp-gray-25);
+  --rp-brand: #3b63fb;
+  --rp-brand-light: #e5f0fe;
+  --rp-brand-hover: #274dea;
+  --rp-negative: #d73220;
+  --rp-positive: #05834e;
+  --rp-elevation: 0 0 0 1px rgb(0 0 0 / 0.04), 0 1px 4px rgb(0 0 0 / 0.12);
+  --rp-raised: 0 1px 3px rgb(0 0 0 / 0.18);
+  color: var(--rp-ink);
+  font:
+    14px / 1.35 "adobe-clean-spectrum-vf",
+    "adobe-clean-variable",
+    "adobe-clean",
+    "Source Sans 3",
+    "Source Sans Pro",
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+@media (prefers-color-scheme: dark) {
+  .rpe:not([data-theme="light"]),
+  .rps:not([data-theme="light"]) {
+    --rp-gray-25: #111111;
+    --rp-gray-50: #1b1b1b;
+    --rp-gray-75: #222222;
+    --rp-gray-100: #2c2c2c;
+    --rp-gray-200: #323232;
+    --rp-gray-300: #393939;
+    --rp-gray-400: #444444;
+    --rp-gray-500: #6d6d6d;
+    --rp-gray-600: #8a8a8a;
+    --rp-gray-700: #afafaf;
+    --rp-gray-800: #dbdbdb;
+    --rp-gray-900: #f2f2f2;
+    --rp-brand: #5d89ff;
+    --rp-brand-light: #1f2a4d;
+    --rp-brand-hover: #7aa0ff;
+    --rp-negative: #ff7059;
+    --rp-positive: #2fbf7f;
+    --rp-elevation: 0 0 0 1px rgb(255 255 255 / 0.06), 0 1px 4px rgb(0 0 0 / 0.5);
+  }
+}
+.rpe *,
+.rps * {
+  box-sizing: border-box;
+}
+.rpe :focus-visible,
+.rps :focus-visible {
+  outline: 2px solid var(--rp-brand);
+  outline-offset: 2px;
+}
+
+/* ——— The editor: the form, and beside it the page, what it lacks, and how it is shared ——— */
+
+.rpe {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 400px;
+  gap: 24px;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .rpe {
+    grid-template-columns: 1fr;
+  }
+}
+.rpe-form,
+.rpe-side {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.rpe-side {
+  position: sticky;
+  top: 16px;
+}
+
+/* A card of the form. */
+.rpe-part {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  border-radius: 16px;
+  background: var(--rp-panel);
+  box-shadow: var(--rp-elevation);
+}
+.rpe-part h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.005em;
+}
+
+/* A field: its label over it, in the gray of what is said about it. */
+.rpe-field {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  color: var(--rp-soft);
+  font-size: 14px;
+}
+.rpe-field small {
+  color: var(--rp-muted);
+}
+.rpe-input {
+  width: 100%;
+  min-height: 32px;
+  padding: 5px 10px;
+  border: 2px solid var(--rp-gray-300);
+  border-radius: 8px;
+  background: var(--rp-panel);
+  color: var(--rp-ink);
+  font: inherit;
+  transition: border-color 0.13s;
+}
+.rpe-input::placeholder {
+  color: var(--rp-gray-600);
+}
+.rpe-input:hover {
+  border-color: var(--rp-gray-400);
+}
+.rpe-input:focus {
+  border-color: var(--rp-gray-900);
+  outline: none;
+}
+.rpe-input:focus-visible {
+  outline: 2px solid var(--rp-brand);
+  outline-offset: 2px;
+}
+textarea.rpe-input {
+  resize: vertical;
+}
+.rpe-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+}
+.rpe-grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.rpe-help,
+.rpe-label {
+  margin: 0;
+  color: var(--rp-muted);
+}
+.rpe-label {
+  color: var(--rp-ink);
+  font-size: 16px;
+  font-weight: 800;
+}
+
+/* Buttons: round, bold; secondary in gray, primary in the blue, quiet without a fill. */
+.rpe-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--rp-gray-100);
+  color: var(--rp-gray-800);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.13s;
+}
+.rpe-button:hover {
+  background: var(--rp-gray-200);
+}
+.rpe-button:active {
+  transform: scale(0.98);
+}
+.rpe-primary {
+  background: var(--rp-brand);
+  color: #fff;
+}
+.rpe-primary:hover {
+  background: var(--rp-brand-hover);
+}
+.rpe-quiet {
+  background: none;
+}
+.rpe-quiet:hover {
+  background: var(--rp-gray-100);
+}
+
+/* An action: a button with its icon, in gray, square-cornered as Spectrum's action buttons are. */
+.rpe-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 32px;
+  padding: 0 12px 0 8px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--rp-gray-100);
+  color: var(--rp-gray-800);
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+}
+.rpe-action:hover {
+  background: var(--rp-gray-200);
+}
+
+/* A choice among few: the options in a track, the one chosen raised on it. */
+.rpe-group {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.rpe-group legend {
+  margin-bottom: 6px;
+  padding: 0;
+}
+.rpe-layouts {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-self: flex-start;
+  gap: 2px;
+  padding: 2px;
+  border-radius: 10px;
+  background: var(--rp-gray-100);
+}
+.rpe-chip {
+  min-height: 28px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: var(--rp-gray-700);
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+}
+.rpe-chip:hover {
+  color: var(--rp-gray-900);
+}
+.rpe-chip[aria-pressed="true"] {
+  background: var(--rp-panel);
+  color: var(--rp-gray-900);
+  font-weight: 700;
+  box-shadow: var(--rp-raised);
+}
+
+/* A quiet action of a row: its icon only. */
+.rpe-icon {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  flex: none;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: var(--rp-gray-800);
+  cursor: pointer;
+}
+.rpe-icon:hover:not(:disabled) {
+  background: var(--rp-gray-100);
+}
+.rpe-icon:disabled {
+  color: var(--rp-gray-400);
+  cursor: default;
+}
+
+/* Who they are. */
+.rpe-photo {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.rpe-photo-circle {
+  display: block;
+  width: 72px;
+  height: 72px;
+  flex: none;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--rp-gray-100);
+}
+.rpe-photo-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.rpe-photo-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: var(--rp-soft);
+}
+.rpe-photo-actions > span {
+  display: flex;
+  gap: 8px;
+}
+
+/* The themes: cards to choose, the one chosen ringed in the blue and ticked. */
+.rpe-themes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.rpe-theme {
+  position: relative;
+  overflow: hidden;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  background: var(--rp-panel);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  box-shadow: var(--rp-elevation);
+  cursor: pointer;
+  transition:
+    box-shadow 0.13s,
+    transform 0.13s;
+}
+.rpe-theme:hover {
+  transform: translateY(-1px);
+}
+.rpe-theme[aria-pressed="true"] {
+  box-shadow: 0 0 0 2px var(--rp-brand);
+}
+.rpe-theme[aria-pressed="true"]::after {
+  content: "";
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background:
+    var(--rp-brand)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5.5 10.5 8.5 13.5 14.5 7' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+    center / 16px no-repeat;
+}
+.rpe-theme-sample {
+  display: flex;
+  height: 76px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 0 14px;
+}
+.rpe-theme-sample span {
+  width: 100%;
+  height: 9px;
+  border-radius: 999px;
+}
+.rpe-theme-sample span:first-child {
+  width: 18px;
+  height: 18px;
+}
+.rpe-theme-name {
+  display: block;
+  padding: 8px 10px;
+  font-weight: 700;
+}
+.rpe-accent {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--rp-soft);
+}
+.rpe-accent input[type="color"] {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 2px solid var(--rp-gray-300);
+  border-radius: 8px;
+  background: none;
+  cursor: pointer;
+}
+.rpe-accent input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 2px;
+}
+.rpe-accent input[type="color"]::-webkit-color-swatch {
+  border: 0;
+  border-radius: 5px;
+}
+
+/* The blocks: an accordion, each a row that opens to its fields. */
+.rpe-blocks {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.rpe-block + .rpe-block {
+  border-top: 1px solid var(--rp-gray-200);
+}
+.rpe-block-head {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 0;
+}
+.rpe-block-name {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 0 8px 0 4px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.rpe-block-name:hover {
+  background: var(--rp-gray-75);
+}
+.rpe-block-name b {
+  flex: none;
+  font-weight: 700;
+}
+.rpe-block-name > span:last-child {
+  overflow: hidden;
+  color: var(--rp-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.rpe-chevron {
+  display: grid;
+  place-items: center;
+  flex: none;
+  color: var(--rp-gray-700);
+  transition: transform 0.15s;
+}
+.rpe-block[data-open] .rpe-chevron {
+  transform: rotate(90deg);
+}
+.rpe-block-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 6px 4px 18px 32px;
+}
+.rpe-pictures {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.rpe-add {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding-top: 4px;
+}
+.rpe-add > span {
+  width: 100%;
+  color: var(--rp-soft);
+}
+
+/* The page, what it lacks, and how it is shared: cards beside the form. */
+.rpe-preview,
+.rpe-problems,
+.rpe-share {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 16px;
+  background: var(--rp-panel);
+  box-shadow: var(--rp-elevation);
+}
+.rpe-preview-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0;
+}
+.rpe-phone {
+  width: 100%;
+  height: 680px;
+  border: 0;
+  border-radius: 28px;
+  background: #fff;
+  box-shadow: 0 0 0 6px var(--rp-gray-800);
+}
+.rpe-problems ul {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--rp-negative);
+}
+.rpe-ok {
+  margin: 0;
+  color: var(--rp-positive);
+  font-weight: 700;
+}
+.rpe-qr {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+.rpe-qr-code {
+  display: block;
+  width: 112px;
+  flex: none;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 0 0 1px var(--rp-gray-200);
+}
+.rpe-qr-code svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.rpe-qr-words {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 10px;
+}
+.rpe-qr-words .rpe-layouts {
+  gap: 6px;
+  padding: 0;
+  background: none;
+}
+.rpe-qr-url {
+  overflow: hidden;
+  color: var(--rp-brand);
+  font-weight: 700;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.rpe-qr-url:hover {
+  text-decoration: underline;
+}
+
+/* ——— The numbers ——— */
+
+.rps {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.rps-numbers {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 16px;
+}
+@media (max-width: 700px) {
+  .rps,
+  .rps-numbers {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.rps-number,
+.rps-part {
+  padding: 18px 20px;
+  border-radius: 16px;
+  background: var(--rp-panel);
+  box-shadow: var(--rp-elevation);
+}
+.rps-number {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.rps-number span,
+.rps-number small {
+  color: var(--rp-soft);
+}
+.rps-number b {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+.rps-wide {
+  grid-column: 1 / -1;
+}
+.rps-part h3 {
+  margin: 0 0 14px;
+  font-size: 16px;
+  font-weight: 800;
+}
+.rps-empty {
+  margin: 0;
+  color: var(--rp-muted);
+}
+.rps-days {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.rps-day {
+  fill: var(--rp-brand-light);
+}
+.rps-days g:hover .rps-day {
+  fill: color-mix(in srgb, var(--rp-brand) 35%, transparent);
+}
+.rps-clicks {
+  fill: none;
+  stroke: var(--rp-brand);
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+}
+.rps-axis {
+  fill: var(--rp-muted);
+  font-size: 11px;
+}
+.rps-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.rps-bars li {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  padding: 0 10px;
+  overflow: hidden;
+  border-radius: 8px;
+}
+.rps-bar {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: 8px;
+  background: var(--rp-brand-light);
+}
+.rps-bar-label {
+  position: relative;
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.rps-bars b,
+.rps-bars small {
+  position: relative;
+}
+.rps-bars small {
+  min-width: 36px;
+  color: var(--rp-muted);
+  text-align: right;
+}
